@@ -1,0 +1,89 @@
+<style>
+    .center-table {
+        margin: 0 auto;
+        width: 80%;
+        border-collapse: collapse;
+    }
+    .center-table th,
+    .center-table td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+    .center-table th:not(:last-child),
+    .center-table td:not(:last-child) {
+        margin-right: 10px;
+    }
+
+    .center-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        margin-top: 50px;
+    }
+</style>
+
+
+
+{% extends 'dashboard/base.html' %}
+
+{% block title %}
+Campaigns
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+            <h1>Check your domain here</h1>
+            <br>
+            <form action="/campaigns/" method="post">
+
+                {% csrf_token %}
+                <label for="domain">Domain:</label>
+                <input type="text" id="domain" name="domain" required style="margin-right: 20px;"> <input type="submit" name="check" value="check">
+                <br><br><br><br>
+                <div class="center-content">
+                    {% if domain %}
+                        <h3>{{ domain }}</h3>
+                    {% endif %}
+                </div>
+            </form>
+
+            
+            {% if result  %}
+                <table class="center-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Campaigns id</th>
+                            <th scope="col">Campaigns name</th>
+                            <th scope="col">Binom</th>
+                            <th scope="col">Group</th>
+                            <th scope="col">60 days Clicks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in result %}
+                            <tr>
+                                <td>{{ r.0 }}</td>
+                                <td>{{ r.1 }}</td>
+                                <td>{{ r.2 }}</td>
+                                <td>{{ r.3 }}</td>
+                                <td>{{ r.4 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No records</p>
+            {% endif %}
+        
+        
+        
+    {% else %}
+            <div class="d-flex justify-content-center">
+                <form action="/login" >
+                    <button class="btn btn-primary btn-block mb-4" type="submit">Sign in</button>
+                </form>
+            </div>
+    {% endif %}
+{% endblock %}

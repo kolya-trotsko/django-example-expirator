@@ -1,0 +1,33 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center">
+
+<form method="post">
+    {% csrf_token %}
+
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <div class="form-outline mb-4">
+        <label for="{{ form.username.id_for_label }}">Username:</label>
+        {{ form.username }}
+    </div>
+    <div class="form-outline mb-4">
+        <label for="{{ form.password.id_for_label }}">Password:</label>
+        {{ form.password }}
+    </div>
+
+    <div class="form-outline mb-4">{{form.captcha}}</div>
+    
+    <button class="btn btn-primary btn-block mb-4" type="submit">Sign in</button>
+</form>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+    <a>{{content_value}}</a>
+        <form action="{% url 'DNS_Records' %}" method="get">
+            <h3>Filter by Record Type:</h3>
+            {% for record_type in record_types %}
+                <input type="checkbox" name="filters" value="{{ record_type }}" {% if record_type in selected_filters %}checked{% endif %}>
+                <label for="filters">{{ record_type }}</label>
+            {% endfor %}
+            <br><br>
+            <div class="input-group">
+                <input type="search" class="form-control rounded" name="query" autocapitalize="none" placeholder="content" style="max-width: 140px;">
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>domain
+                            <br>
+                            <button type="submit" value="domain" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                            <button type="submit" value="domain DESC" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                        </th>
+                        <th>type
+                            <br>
+                            <button type="submit" value="type" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                            <button type="submit" value="type DESC" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                        </th>
+                        <th>content
+                            <br>
+                            <button type="submit" value="content" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                            <button type="submit" value="content DESC" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                        </th>
+                        <th>proxied
+                            <br>
+                            <button type="submit" value="proxied" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                            <button type="submit" value="proxied DESC" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                        </th>
+                    </tr>
+                </thead>
+            </form>
+            <form action="{% url 'DNS_Records' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="save_change" class="btn btn-primary" style="float: right; margin-right: 10px; margin-bottom: 20px; margin-top: -80px;">Зберегти зміни</button>
+                <tbody>
+                    {% for domain in domains %}
+                        <tr>
+                            <td>{{ domain.1 }}</td>
+                            <td>{{ domain.2 }}</td>
+                            <td><input type="text" name="content_{{ domain.0 }}" value="{{ domain.3 }}"></td>
+                            <td>{{ domain.4 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </form>
+        </table>
+    {% else %}
+        <div class="d-flex justify-content-center">
+            <form action="/login">
+                <button class="btn btn-primary btn-block mb-4" type="submit">Sign in</button>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

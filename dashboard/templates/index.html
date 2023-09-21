@@ -1,0 +1,265 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3" style="width: 400px;">
+                    <form action="{% url 'index' %}" method="get">
+                        <br>
+                            <input type="checkbox" value=" overdue " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;">Overdue</label>
+                            <input type="checkbox" value=" overdue_7 " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;">Overdue for 7 days</label>
+                            <input type="checkbox" value=" not_None " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;">Not none</label>
+                        <br>
+                            <input type="checkbox" value=" not_overdue " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;">Not overdue</label>
+                            <input type="checkbox" value=" archived " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;">archived</label>
+                            <input type="checkbox" value=" Not_archived " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;">Not archived</label>
+                        <br>
+                            <input type="checkbox" value=" error " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;"> Errors </label>
+                            <input type="checkbox" value=" yellow_error " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;">yellow error</label>
+                            <input type="checkbox" value=" red_error " name="filter_over">
+                            <label for="overdue" style="padding: 2px 8px; font-size: 14px;">red error</label>
+                        <div class="input-group" style="margin-top: 30px;">
+                            <input type="search" class="form-control rounded" name="query" autocapitalize="none" placeholder="domain.com">
+                            
+                            <button type="submit" class="btn btn-outline-primary">Search</button>
+                        </div>
+                    </form>                                        
+                </div>
+                {% if domains.has_other_pages %}
+                    <div class="col-md-3 offset-md-6" style="margin-left: 90%; margin-top: -50px;">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="?page=1&order_by={{ order_by }}&filter_over={{ filter_over }}">First</a></li>
+                                {% if domains.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ domains.previous_page_number }}&order_by={{ order_by }}&filter_over={{ filter_over }}">{{ domains.previous_page_number }}</a></li>
+                                {% endif %}
+                                <li class="page-item active"><a class="page-link" href="?page={{ domains.number }}&order_by={{ order_by }}&filter_over={{ filter_over }}">{{ domains.number }}</a></li>
+                                {% if domains.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ domains.next_page_number }}&order_by={{order_by}}&filter_over={{filter_over}}">{{ domains.next_page_number }}</a></li>
+                                {% endif %}
+                                <li class="page-item"><a class="page-link" href="?page={{ domains.paginator.num_pages }}&order_by={{ order_by }}&filter_over={{ filter_over }}">Last</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="container">
+            <table class="table" style="font-size:14px;" style="width: 100%">
+                <thead>
+                    <tr>
+                        <form action="{% url 'index' %}" method="get">
+                            <input type="hidden" name="page" value="{{ domains.number }}">
+                            {%if filter_over %}
+                                <input type="hidden" name="filter_over" value="{{ filter_over }}">
+                            {% endif %}
+                            
+                            {%if query %}
+                                <input type="hidden" name="query" value="{{ query }}">
+                            {% endif %}
+                            
+                            <th scope="col" style="padding: 0px 0px;">#
+                                <br>
+                                    <button type="submit" value="id" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-id" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">domain
+                                <br>
+                                <button type="submit" value="domain_name" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                <button type="submit" value="-domain_name" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>                   
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">expiration_date
+                                <br>
+                                    <button type="submit" value="last_expiration_date" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-last_expiration_date" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+                            
+                            <th scope="col" style="padding-left: 4px;">days_left
+                                <br>
+                                    <button type="submit" value="-days_left" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="days_left" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+                            
+                            <th scope="col" style="padding-left: 4px;">binom allowed
+                                <br>
+                                    <button type="submit" value="binom_allowed" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-binom_allowed" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+                            
+                            <th scope="col" style="padding-left: 4px;">binom exists
+                                <br>
+                                    <button type="submit" value="binom_exists" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-binom_exists" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">registrar
+                                <br>
+                                    <button type="submit" value="registrar" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-registrar" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;"> registrar acc
+                                <br>
+                                    <button type="submit" value="registrar_acc" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-registrar_acc" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">cloudflare_acc
+                                <br>
+                                    <button type="submit" value="cloudflare_acc" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-cloudflare_acc" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">ssl_days_left
+                                <br>
+                                    <button type="submit" value="ssl_days_left" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-ssl_days_left" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">click 60 days
+                                <br>
+                                    <button type="submit" value="-days_clicks_60" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="days_clicks_60" name="order_by" style="padding: 0px 0px; font-size: 8px;"> ▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">binom owner
+                                <br>
+                                    <button type="submit" value="binom_owner" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-binom_owner" name="order_by" style="padding: 0px 0px; font-size: 8px;"> ▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">archived
+                                <br>
+                                    <button type="submit" value="archived" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-archived" name="order_by" style="padding: 0px 0px; font-size: 8px;"> ▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">ssl_error
+                                <br>
+                                    <button type="submit" value="ssl_error" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-ssl_error" name="order_by" style="padding: 0px 0px; font-size: 8px;"> ▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">cf_ns
+                                <br>
+                                    <button type="submit" value="cf_ns" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-cf_ns" name="order_by" style="padding: 0px 0px; font-size: 8px;"> ▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">name_servers
+                                <br>
+                                    <button type="submit" value="name_servers" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-name_servers" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+
+                            <th scope="col" style="padding-left: 4px;">auto_renew
+                                <br>
+                                    <button type="submit" value="auto_renew" name="order_by" style="padding: 0px 0px; font-size: 8px;">▲</button>
+                                    <button type="submit" value="-auto_renew" name="order_by" style="padding: 0px 0px; font-size: 8px;">▼</button>
+                            </th>
+                        </form>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if domains  %}
+                        {% for el in domains %}
+                            <tr>
+                                <td>{{ el.id }}</td>
+                                <td style = "color: {{ el.ERROR_status }};" onclick="showTooltip('{{ el.ERROR }}', this)">{{ el.domain_name }}</td>
+
+                                <script>
+                                    function showTooltip(error, element) {
+                                        var tooltip = element.querySelector('.tooltip');
+
+                                        if (!tooltip) {
+                                            tooltip = document.createElement('div');
+                                            tooltip.className = 'tooltip';
+                                            tooltip.style.opacity = '1';
+                                            tooltip.innerHTML = '<a style="z-index: 9999; position: relative;">' + error + '</a>';
+                                            element.appendChild(tooltip);
+                                        }
+
+                                        if (tooltip.style.display === 'none') {
+                                            tooltip.style.display = 'block'; // Відображення підказки
+                                        } else {
+                                            tooltip.style.display = 'none'; // Приховання підказки
+                                        }
+                                    }
+
+                                </script>                              
+
+                                <td>{{ el.last_expiration_date|date:'Y-m-d' }}</td>
+                                <td>{{ el.days_left }}</td>
+                                <td>{{ el.binom_allowed }}</td>
+                                <td>{{ el.binom_exists }}</td>
+                                <td>{{ el.registrar }}</td>
+                                <td>{{ el.registrar_acc }}</td>
+                                <td>{{ el.cloudflare_acc }}</td>
+                                <td>{{ el.ssl_days_left }}</td>
+                                <td style="padding-right: 30px; padding-left: 40px;">{{ el.days_clicks_60 }}</td>
+                                <td>{{ el.binom_owner }}</td>
+                                
+                                <td>
+                                    <form method="POST" action="{% url 'index' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="archived" value="{{ el.domain_name }}">
+                                        <button type="submit">{{ el.archived }}</button>
+                                    </form>
+                                </td>
+                                
+                                <td {% if el.ssl_error and el.binom_exists %}style="color: red;"{% endif %}>
+                                    {{ el.ssl_error }}
+                                </td>
+                                <td>{{ el.cf_ns }}</td>
+                                <td>{{ el.name_servers }}</td>
+                                <td>{{ el.auto_renew }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <p>No records</p>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <br>
+        {% if domains.has_other_pages %}
+            <div class="col-md-3 offset-md-6" style="margin-left: 50%;">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="?page=1&order_by={{ order_by }}&filter_over={{ filter_over }}">First</a></li>
+                        {% if domains.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ domains.previous_page_number }}&order_by={{ order_by }}&filter_over={{ filter_over }}">{{ domains.previous_page_number }}</a></li>
+                        {% endif %}
+                        <li class="page-item active"><a class="page-link" href="?page={{ domains.number }}&order_by={{ order_by }}&filter_over={{ filter_over }}">{{ domains.number }}</a></li>
+                        {% if domains.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ domains.next_page_number }}&order_by={{order_by}}&filter_over={{filter_over}}">{{ domains.next_page_number }}</a></li>
+                        {% endif %}
+                        <li class="page-item"><a class="page-link" href="?page={{ domains.paginator.num_pages }}&order_by={{ order_by }}&filter_over={{ filter_over }}">Last</a></li>
+                    </ul>
+                </nav>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="d-flex justify-content-center">
+            <form action="/login" >
+                <button class="btn btn-primary btn-block mb-4" type="submit">Sign in</button>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

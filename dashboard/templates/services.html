@@ -1,0 +1,249 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+  {% if request.user.is_authenticated %}
+  <head>
+    <title>API Request Form</title>
+    <style>
+      .container {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .table-container {
+        flex: 1;
+        margin-right: 10px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div style="position: absolute; left: 0; right: 0;">
+        <h2 style="margin-top: 20px; text-align: center;">Godaddy</h2>
+        <div class="container">
+            <div class="table-container">
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid #ddd; padding: 8px;">API Key</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">API Secret</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Owner</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for reg in godaddies %}
+                  <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.0 }}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.1 }}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.2 }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="form-container" style="margin-left: 365px;">
+              <form action="/services/" method="post">
+                {% csrf_token %}
+                <label for="api_key">API Key:</label>
+                <input type="text" id="api_key" name="api_key" required><br><br>
+            
+                <label for="api_secret">Api secret:</label>
+                <input type="text" id="api_secret" name="api_secret" required><br><br>
+            
+                <label for="owner">Owner:</label>
+                <input type="text" id="owner" name="owner" required><br><br>
+            
+                <input type="submit" name="add_godaddy" value="Add">
+                <input type="submit" name="delete_godaddy" value="Delete">
+              </form>
+            </div>            
+          </div>
+          
+        <h2 style="margin-top: 90px; text-align: center;">Namecheap</h2>
+        <div class="container">
+            <div class="table-container">
+          <table style="border-collapse: collapse; width: 100%;">
+            <thead>
+              <tr>
+                <th style="border: 1px solid #ddd; padding: 8px;">API Key</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">API User</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Client IP</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reg in namecheaps %}
+        <tr>
+        <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.0 }}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.1 }}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.2 }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        </div>
+        <div class="form-container" style="margin-left: 500px;">
+          <form action="/services/" method="post">
+            {% csrf_token %}
+            <label for="api_key">API Key:</label>
+            <input type="text" id="api_key" name="api_key" required><br><br>
+        
+            <label for="api_user">API User:</label>
+            <input type="text" id="api_user" name="api_user" required><br><br>
+        
+            <label for="client_ip">Client IP:</label>
+            <input type="text" id="client_ip" name="client_ip" required><br><br>
+        
+            <input type="submit" name="add_namecheap" value="Add">
+            <input type="submit" name="delete_namecheap" value="Delete">
+          </form>
+        </div>        
+  </div>
+
+  <h2 style="margin-top: 50px; text-align: center;">Cloudflare</h2>
+  <div class="container">
+    <div class="table-container">
+      <table style="border-collapse: collapse; width: 100%;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #ddd; padding: 8px;">Key</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reg in cloudflares %}
+          <tr>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.0 }}</td>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.1 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="form-container" style="margin-left: 500px;">
+      <form action="/services/" method="post">
+        {% csrf_token %}
+        <label for="key">Key:</label>
+        <input type="text" id="key" name="key" required><br><br>
+
+        <label for="email">email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+
+        <input type="submit" name="add_cf" value="Add">
+        <input type="submit" name="delete_cf" value="Delete">
+      </form>
+    </div>
+  </div>
+
+
+    <h2 style="margin-top: 50px; text-align: center;">Ukraine</h2>
+  <div class="container">
+    <div class="table-container">
+      <table style="border-collapse: collapse; width: 100%;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #ddd; padding: 8px;">Key</th>
+            <th style="border: 1px solid #ddd; padding: 8px;">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reg in ukraines %}
+          <tr>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.0 }}</td>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.1 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="form-container" style="margin-left: 500px;">
+      <form action="/services/" method="post">
+        {% csrf_token %}
+        <label for="api_key">Key:</label>
+        <input type="text" id="api_key" name="api_key" required><br><br>
+
+        <label for="owner">owner:</label>
+        <input type="text" id="owner" name="owner" required><br><br>
+
+        <input type="submit" name="add_ukraine" value="Add">
+        <input type="submit" name="delete_ukraine" value="Delete">
+      </form>
+    </div>
+  </div>
+
+
+  <h2 style="margin-top: 50px; text-align: center;">Binom</h2>
+  <div class="container">
+    <div class="table-container">
+      <table style="border-collapse: collapse; width: 100%;">
+        <thead>
+          <tr>
+              <th style="border: 1px solid #ddd; padding: 8px;">binom</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">URL 1</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">URL 2</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">OTP</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">API</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">HASH</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reg in binoms %}
+          <tr>
+              <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.0 }}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.1 }}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.2 }}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.3 }}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.4 }}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.5 }}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">{{ reg.6 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="form-container" style="margin-left: 50px;">
+      <form action="/services/" method="post">
+        {% csrf_token %}
+          <label for="binom">binom:</label>
+          <input type="text" id="binom" name="binom" required><br><br>
+
+          <label for="url_1">URL 1:</label>
+          <input type="text" id="url_1" name="url_1" required><br><br>
+
+          <label for="url_2">URL 2:</label>
+          <input type="text" id="url_2" name="url_2" required><br><br>
+
+          <label for="otp">OTP:</label>
+          <input type="text" id="otp" name="otp" required><br><br>
+
+          <label for="api">API:</label>
+          <input type="text" id="api" name="api" required><br><br>
+
+          <label for="hash">HASH:</label>
+          <input type="text" id="hash" name="hash" required><br><br>
+
+          <label for="owner">Owner:</label>
+          <input type="text" id="owner" name="owner" required><br><br>
+
+        <input type="submit" name="add_binom" value="Add">
+        <input type="submit" name="delete_binom" value="Delete">
+      </form>
+    </div>
+  </div>
+
+</div>
+</body>
+{% else %}
+<div class="d-flex justify-content-center">
+  <form action="/login">
+    <button class="btn btn-primary btn-block mb-4" type="submit">Sign in</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

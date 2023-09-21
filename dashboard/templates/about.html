@@ -1,0 +1,22 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}
+About
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+            <h1>About Page</h1>
+            <br>
+            <a>name:{{Username}}</a>
+            <br>
+            <a>token:{{token}}</a>
+            
+    {% else %}
+            <div class="d-flex justify-content-center">
+                <form action="/login" >
+                    <button class="btn btn-primary btn-block mb-4" type="submit">Sign in</button>
+                </form>
+            </div>
+    {% endif %}
+{% endblock %}
